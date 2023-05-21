@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ParkingCard from "../../components/ParkingCard";
 import { useSelector } from "react-redux";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
 
 const PARKINGS = [
   {
@@ -54,6 +56,19 @@ const PARKINGS = [
 ];
 const ParkingGrid = () => {
   const { quickFilter , priceFilter, availability} = useSelector((state: any) => state.appStore);
+  const collectionRef = collection(db, "parkings");
+  const [parkings, setParkings] = useState<any>([])
+
+  useEffect(() => {
+    getDocs(collectionRef)
+      .then((response) => {
+        const data = (response.docs.map((item) => item.data())[0]);
+        setParkings(data.parkings);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <div
@@ -68,7 +83,7 @@ const ParkingGrid = () => {
         paddingTop: "10px",
       }}
     >
-      {PARKINGS.map((park, index) => {
+      {parkings.map((park: any, index: number) => {
         if(availability &&  !park?.workingTime.toLowerCase().includes("24/24")) return;
         if(park?.price > priceFilter && priceFilter !== 0) return;
         if (
