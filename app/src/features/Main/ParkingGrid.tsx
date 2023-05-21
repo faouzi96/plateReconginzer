@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import ParkingCard from "../../components/ParkingCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
+import { setParkingsData } from "../../store/appSlice";
 
 const PARKINGS = [
   {
@@ -56,6 +57,7 @@ const PARKINGS = [
 ];
 const ParkingGrid = () => {
   const { quickFilter , priceFilter, availability} = useSelector((state: any) => state.appStore);
+  const dispatch = useDispatch();
   const collectionRef = collection(db, "parkings");
   const [parkings, setParkings] = useState<any>([])
 
@@ -64,6 +66,7 @@ const ParkingGrid = () => {
       .then((response) => {
         const data = (response.docs.map((item) => item.data())[0]);
         setParkings(data.parkings);
+        dispatch(setParkingsData(data));
       })
       .catch((error) => {
         console.log(error);

@@ -2,10 +2,11 @@ import React from 'react'
 import AppProvider from './provider/AppProvider';
 import AppHeader from './features/AppHeader/AppHeader';
 import { app } from './firebaseConfig'
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
-    <AppProvider><AppHeader /></AppProvider>
+    <AppProvider><AppHeader /><ToastContainer autoClose={3000} position='top-right'></ToastContainer></AppProvider>
   );
 }
 

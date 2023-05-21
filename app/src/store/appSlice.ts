@@ -5,6 +5,7 @@ export interface CounterState {
   nearToMe: boolean;
   priceFilter: number;
   availability: boolean;
+  parkingsData: any;
 }
 
 const initialState: CounterState = {
@@ -12,6 +13,7 @@ const initialState: CounterState = {
   nearToMe: false,
   priceFilter: 0,
   availability: false,
+  parkingsData: null
 }
 
 export const appSlice = createSlice({
@@ -30,9 +32,12 @@ export const appSlice = createSlice({
     setAvailability: (state, action) => {
       return {...state, availability: action.payload}
     },
+    setParkingsData: (state, action) => {
+      return {...state, parkingsData: action.payload}
+    },
   },
 })
 
-export const { setQuickFilter, setNearToMe, setPriceFilter, setAvailability } = appSlice.actions
+export const { setQuickFilter, setNearToMe, setPriceFilter, setAvailability, setParkingsData } = appSlice.actions
 
 export default appSlice.reducer

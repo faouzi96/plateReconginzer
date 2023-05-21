@@ -5,7 +5,6 @@ import {
   InputGroup,
   ListGroup,
   Modal,
-  Toast,
 } from "react-bootstrap";
 import { useState } from "react";
 // ts-ignore
@@ -13,8 +12,10 @@ import img from "../images/img.jpg";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const ParkingCard = ({ data }: any) => {
+  const {parkingsData} = useSelector((state: any)=> state.appStore)
   const [show, setShow] = useState<boolean>(false);
   const [license, setLicense] = useState<string>("");
 
@@ -23,21 +24,23 @@ const ParkingCard = ({ data }: any) => {
 
   const handleSubmit = ()=>{
     const docToUpadate = doc(db, "parkings", "98q4cgFU7rVL70LVumJM");
-    const constructedData = data;
-    constructedData.parkings[0].numberSlots--;
-    constructedData.parkings[0].books.push(license);
-    console.log(constructedData);
-    // updateDoc(docToUpadate, constructedData).then(()=>{
-    //   toast.success("Vehicle has left the parking", {
-    //     autoClose: 3000,
-    //     position: "top-right"
-    //   });
-    // }).catch((error)=> {
-    //   toast.error(error, {
-    //     autoClose: 5000,
-    //     position: "top-right"
-    //   })
-    // })
+    let constructedData = parkingsData.parkings.map((park: any, index:number)=> {
+      if(park.parkingName === data.parkingName){
+        return {...park, books: [...park.books, license], numberSlots: park.numberSlots - 1}
+      }
+      return park;
+    })
+    updateDoc(docToUpadate, {parkings: constructedData}).then(()=>{
+      toast.success("Vehicle has left the parking", {
+        autoClose: 3000,
+        position: "top-right"
+      });
+    }).catch((error)=> {
+      toast.error(error, {
+        autoClose: 5000,
+        position: "top-right"
+      })
+    })
   }
   return (
     <Card style={{ width: "300px", height: "500px" }}>
@@ -72,6 +75,7 @@ const ParkingCard = ({ data }: any) => {
               justifyContent: "center",
               alignItems: "center",
               color: "#000",
+              cursor: "pointer"
             }}
             onClick={handleShow}
           >
@@ -85,7 +89,7 @@ const ParkingCard = ({ data }: any) => {
             keyboard={false}
           >
             <Modal.Header closeButton>
-              <Modal.Title>Modal title</Modal.Title>
+              <Modal.Title>{data.parkingName} Reservation</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <InputGroup className="mb-3 w-100">
