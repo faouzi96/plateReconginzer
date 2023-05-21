@@ -31,10 +31,11 @@ const ParkingCard = ({ data }: any) => {
       return park;
     })
     updateDoc(docToUpadate, {parkings: constructedData}).then(()=>{
-      toast.success("Vehicle has left the parking", {
+      toast.success("Slot reserved!", {
         autoClose: 3000,
         position: "top-right"
       });
+      handleClose();
     }).catch((error)=> {
       toast.error(error, {
         autoClose: 5000,
