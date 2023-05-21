@@ -7,18 +7,7 @@ import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { app, db } from "./firebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
 
-const PARKING_NAME = "parking1"
-const data = [
-  {
-    parkings: [
-      {
-        books: ["PGMN112"],
-        parkingName: "parking1",
-        numberSlots: 12,
-      },
-    ],
-  },
-];
+const PARKING_NAME = "Axel II. Parking"
 
 function App() {
   const [licensePlate, setLicensePlate] = useState<string>("");
