@@ -5,10 +5,14 @@ import {
   InputGroup,
   ListGroup,
   Modal,
+  Toast,
 } from "react-bootstrap";
 import { useState } from "react";
 // ts-ignore
 import img from "../images/img.jpg";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
+import { toast } from "react-toastify";
 
 const ParkingCard = ({ data }: any) => {
   const [show, setShow] = useState<boolean>(false);
@@ -18,7 +22,22 @@ const ParkingCard = ({ data }: any) => {
   const handleShow = () => setShow(true);
 
   const handleSubmit = ()=>{
-    console.log(license);
+    const docToUpadate = doc(db, "parkings", "98q4cgFU7rVL70LVumJM");
+    const constructedData = data;
+    constructedData.parkings[0].numberSlots--;
+    constructedData.parkings[0].books.push(license);
+    console.log(constructedData);
+    // updateDoc(docToUpadate, constructedData).then(()=>{
+    //   toast.success("Vehicle has left the parking", {
+    //     autoClose: 3000,
+    //     position: "top-right"
+    //   });
+    // }).catch((error)=> {
+    //   toast.error(error, {
+    //     autoClose: 5000,
+    //     position: "top-right"
+    //   })
+    // })
   }
   return (
     <Card style={{ width: "300px", height: "500px" }}>
