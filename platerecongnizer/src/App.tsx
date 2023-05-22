@@ -91,6 +91,13 @@ function App() {
         </Form>
       </Row>
       <ToastContainer />
+      <div style={{
+        position: "absolute",
+        top:"10px",
+        left: "10px",
+        border: "1px solid #00000050",
+        padding: "5px 15px"
+      }}>{PARKING_NAME}</div>
     </Container>
   );
 }
