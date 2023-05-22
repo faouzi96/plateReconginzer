@@ -5,56 +5,6 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import { setParkingsData } from "../../store/appSlice";
 
-const PARKINGS = [
-  {
-    address: "Gliwice, Kochanowskiego 35",
-    price: 3,
-    books: [],
-    numberSlots: 12,
-    parkingName: "parking name one",
-    workingTime: "open 24/24",
-  },
-  {
-    address: "Gliwice, Jakoni 23",
-    price: 7,
-    books: [],
-    numberSlots: 10,
-    parkingName: "Hala lala",
-    workingTime: "open 24/24",
-  },
-  {
-    address: "Katowice, Kochanowskiego 5",
-    price: 3.5,
-    books: [],
-    numberSlots: 12,
-    parkingName: "parkingisko",
-    workingTime: "open 20/24",
-  },
-  {
-    address: "Katowice, Kocha 35",
-    price: 4,
-    books: [],
-    numberSlots: 7,
-    parkingName: "parking name one",
-    workingTime: "open 24/24",
-  },
-  {
-    address: "Dublin, Skiego 15",
-    price: 2,
-    books: [],
-    numberSlots: 22,
-    parkingName: "Dublin Park",
-    workingTime: "open 24/24",
-  },
-  {
-    address: "Gliwice, Kochanowskiego 30",
-    price: 2.5,
-    books: [],
-    numberSlots: 14,
-    parkingName: "Kocha Park",
-    workingTime: "open 24/24",
-  },
-];
 const ParkingGrid = () => {
   const { quickFilter , priceFilter, availability} = useSelector((state: any) => state.appStore);
   const dispatch = useDispatch();
@@ -78,7 +28,11 @@ const ParkingGrid = () => {
       style={{
         width: "100%",
         height: "100%",
-        overflow: "scroll",
+        border: "1px solid #22222220",
+        borderRadius: "5px",
+        paddingBottom: "5px",
+        overflowY: "scroll",
+        overflowX: "auto",
         display: "grid",
         gridTemplateColumns: "repeat(5, 1fr)",
         gap: "10px 0",

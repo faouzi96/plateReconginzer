@@ -1,20 +1,26 @@
-import React from 'react'
-import { Container, Navbar, Nav } from 'react-bootstrap';
+import React from "react";
+import { Container, Navbar } from "react-bootstrap";
 
 const AppHeader = () => {
   return (
     <Navbar bg="light" expand="lg">
-    <Container>
-        <Navbar.Brand href="#home">PARKEASY</Navbar.Brand>
+      <Container fluid>
+        <Navbar.Brand
+          href="#home"
+          style={{
+            fontSize: "24px",
+            marginLeft: "100px",
+          }}
+        >
+          PARKEASY
+        </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
-          <Navbar.Text>
-            Sign in
-          </Navbar.Text>
+          <Navbar.Text></Navbar.Text>
         </Navbar.Collapse>
       </Container>
-  </Navbar>
-  )
-}
+    </Navbar>
+  );
+};
 
-export default AppHeader
+export default AppHeader;
