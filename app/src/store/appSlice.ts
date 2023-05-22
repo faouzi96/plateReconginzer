@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export interface CounterState {
   quickFilter: string;
-  nearToMe: boolean;
+  nearToMe: string;
   priceFilter: number;
   availability: boolean;
   parkingsData: any;
@@ -10,7 +10,7 @@ export interface CounterState {
 
 const initialState: CounterState = {
   quickFilter: "",
-  nearToMe: false,
+  nearToMe: "",
   priceFilter: 0,
   availability: false,
   parkingsData: null

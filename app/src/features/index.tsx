@@ -12,7 +12,7 @@ function MainApp() {
         <Search />
         <Container fluid className="d-flex flex-row-reverse justify-content-between align-items-center" style={{
             display: "flex",
-            height: "80%",
+            height: "90%",
         }}>
         <MenuFilter />
         <ParkingGrid />

@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import { setParkingsData } from "../../store/appSlice";
+import { toast } from "react-toastify";
 
 const ParkingGrid = () => {
-  const { quickFilter , priceFilter, availability} = useSelector((state: any) => state.appStore);
+  const { quickFilter , priceFilter, availability, nearToMe} = useSelector((state: any) => state.appStore);
   const dispatch = useDispatch();
   const collectionRef = collection(db, "parkings");
   const [parkings, setParkings] = useState<any>([])
@@ -18,8 +19,8 @@ const ParkingGrid = () => {
         setParkings(data.parkings);
         dispatch(setParkingsData(data));
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        toast.error("Server Error!");
       });
   }, []);
 
@@ -43,6 +44,7 @@ const ParkingGrid = () => {
       {parkings.map((park: any, index: number) => {
         if(availability &&  !park?.workingTime.toLowerCase().includes("24/24")) return;
         if(park?.price > priceFilter && priceFilter !== 0) return;
+        if(Boolean(nearToMe) && !park?.address.toLowerCase().includes(nearToMe.toLowerCase())) return;
         if (
           park?.parkingName.toLowerCase().includes(quickFilter.toLowerCase()) ||
           park?.address.toLowerCase().includes(quickFilter.toLowerCase()) ||
