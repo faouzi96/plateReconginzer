@@ -7,21 +7,27 @@ import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { app, db } from "./firebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
 
-const PARKING_NAME = "Axel II. Parking"
+const PARKING_NAME = "Axel II. Parking";
 
 function App() {
   const [licensePlate, setLicensePlate] = useState<string>("");
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [data, setData] = useState<any>(null)
+  const [data, setData] = useState<any>(null);
   const collectionRef = collection(db, "parkings");
 
   useEffect(() => {
     getDocs(collectionRef)
       .then((response) => {
-        const parkings = (response.docs.map((item) => item.data())[0]);
+        const parkings = response.docs.map((item) => item.data())[0];
         setData(parkings);
-        const parking = parkings.parkings[0];
-        if(parking?.parkingName === PARKING_NAME && parking?.books?.includes(licensePlate)) setIsValid(true);
+        const parking = parkings.parkings.filter(
+          (park: any) => park.parkingName === PARKING_NAME
+        )[0];
+        if (
+          parking?.parkingName === PARKING_NAME &&
+          parking?.books?.licensePlate?.includes(licensePlate)
+        )
+          setIsValid(true);
         else setIsValid(false);
       })
       .catch((error) => {
@@ -42,30 +48,40 @@ function App() {
           }
         )
         .then((result) => {
+          console.log(result);
           const plate = result.data[0].plate_text;
           setLicensePlate(plate.slice(plate.length / 2));
         });
     });
   };
 
-  const handleQuitParking = ()=>{
+  const handleQuitParking = () => {
     const docToUpadate = doc(db, "parkings", "98q4cgFU7rVL70LVumJM");
     const constructedData = data;
-    constructedData.parkings[0].numberSlots++;
-    constructedData.parkings[0].books = data.parkings[0].books.filter((item: any)=> item !== licensePlate);
-    updateDoc(docToUpadate, constructedData).then(()=>{
-      toast.success("Vehicle has left the parking", {
-        autoClose: 3000,
-        position: "top-right"
-      });
-      setIsValid(false);
-    }).catch((error)=> {
-      toast.error(error, {
-        autoClose: 5000,
-        position: "top-right"
-      })
-    })
-  }
+    constructedData.parkings.filter(
+      (park: any) => park.parkingName === PARKING_NAME
+    )[0].numberSlots++;
+    constructedData.parkings.filter(
+      (park: any) => park.parkingName === PARKING_NAME
+    )[0].books = data.parkings[0].books.filter(
+      (item: any) => item.licensePlate !== licensePlate
+    );
+    console.log(constructedData);
+    // updateDoc(docToUpadate, constructedData)
+    //   .then(() => {
+    //     toast.success("Vehicle has left the parking", {
+    //       autoClose: 3000,
+    //       position: "top-right",
+    //     });
+    //     setIsValid(false);
+    //   })
+    //   .catch((error) => {
+    //     toast.error(error, {
+    //       autoClose: 5000,
+    //       position: "top-right",
+    //     });
+    //   });
+  };
   return (
     <Container
       className="w-25 d-flex justify-content-center align-items-center"
@@ -74,7 +90,11 @@ function App() {
       }}
     >
       <Row>
-        {licensePlate && <Alert variant="info">Vehicle {licensePlate} is {!isValid && "NOT"} Allowed</Alert>}
+        {licensePlate && (
+          <Alert variant="info">
+            Vehicle {licensePlate} is {!isValid && "NOT"} Allowed
+          </Alert>
+        )}
         <Form className="border pb-4 pt-4" onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label className="mb-4">
@@ -85,19 +105,28 @@ function App() {
           <Button variant="primary" type="submit">
             Check Plate
           </Button>
-          <Button variant="primary" type="button" className="m-2" onClick={handleQuitParking}>
+          <Button
+            variant="primary"
+            type="button"
+            className="m-2"
+            onClick={handleQuitParking}
+          >
             Free slot
           </Button>
         </Form>
       </Row>
       <ToastContainer />
-      <div style={{
-        position: "absolute",
-        top:"10px",
-        left: "10px",
-        border: "1px solid #00000050",
-        padding: "5px 15px"
-      }}>{PARKING_NAME}</div>
+      <div
+        style={{
+          position: "absolute",
+          top: "10px",
+          left: "10px",
+          border: "1px solid #00000050",
+          padding: "5px 15px",
+        }}
+      >
+        {PARKING_NAME}
+      </div>
     </Container>
   );
 }
