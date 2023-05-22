@@ -25,7 +25,9 @@ function App() {
         )[0];
         if (
           parking?.parkingName === PARKING_NAME &&
-          parking?.books?.licensePlate?.includes(licensePlate)
+          parking?.books?.filter((book: any) =>
+            book.licencsePlate?.includes(licensePlate)
+          )
         )
           setIsValid(true);
         else setIsValid(false);
@@ -48,7 +50,6 @@ function App() {
           }
         )
         .then((result) => {
-          console.log(result);
           const plate = result.data[0].plate_text;
           setLicensePlate(plate.slice(plate.length / 2));
         });
@@ -57,30 +58,45 @@ function App() {
 
   const handleQuitParking = () => {
     const docToUpadate = doc(db, "parkings", "98q4cgFU7rVL70LVumJM");
+    const hours = new Date().getUTCHours();
+    const endTime = data.parkings
+      .filter((park: any) => park.parkingName === PARKING_NAME)[0]
+      .books.filter(
+        (item: any) => item.licencsePlate === licensePlate
+      )[0].endTime;
+    const price = data.parkings.filter(
+      (park: any) => park.parkingName === PARKING_NAME
+    )[0].price;
+
+    if (endTime < hours) {
+      toast.warn(`You need to pay ${(hours - endTime) * price} PLN extra!`);
+      return;
+    }
+
     const constructedData = data;
     constructedData.parkings.filter(
       (park: any) => park.parkingName === PARKING_NAME
     )[0].numberSlots++;
     constructedData.parkings.filter(
       (park: any) => park.parkingName === PARKING_NAME
-    )[0].books = data.parkings[0].books.filter(
-      (item: any) => item.licensePlate !== licensePlate
-    );
-    console.log(constructedData);
-    // updateDoc(docToUpadate, constructedData)
-    //   .then(() => {
-    //     toast.success("Vehicle has left the parking", {
-    //       autoClose: 3000,
-    //       position: "top-right",
-    //     });
-    //     setIsValid(false);
-    //   })
-    //   .catch((error) => {
-    //     toast.error(error, {
-    //       autoClose: 5000,
-    //       position: "top-right",
-    //     });
-    //   });
+    )[0].books = data.parkings
+      .filter((park: any) => park.parkingName === PARKING_NAME)[0]
+      .books.filter((item: any) => item.licencsePlate !== licensePlate);
+
+    updateDoc(docToUpadate, constructedData)
+      .then(() => {
+        toast.success("Vehicle has left the parking", {
+          autoClose: 3000,
+          position: "top-right",
+        });
+        setIsValid(false);
+      })
+      .catch((error) => {
+        toast.error(error, {
+          autoClose: 5000,
+          position: "top-right",
+        });
+      });
   };
   return (
     <Container
