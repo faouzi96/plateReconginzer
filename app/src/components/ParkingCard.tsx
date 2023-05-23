@@ -22,12 +22,13 @@ const ParkingCard = ({ data }: any) => {
   const [license, setLicense] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [startTime, setStartTime] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number>(new Date().getUTCHours() * 3600);
   const [endTime, setEndTime] = useState<number>(0);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   useEffect(() => {
+    console.log(startTime)
     setEndTime(startTime + 3600);
   }, [startTime]);
 
@@ -53,6 +54,7 @@ const ParkingCard = ({ data }: any) => {
                 licencsePlate: license,
                 startTime: startTime / 3600,
                 endTime: endTime / 3600,
+                date: new Date()
               },
             ],
             numberSlots: park.numberSlots - 1,
@@ -160,8 +162,8 @@ const ParkingCard = ({ data }: any) => {
                   From{" "}
                 </span>
                 <TimePicker
-                  start="00:00"
-                  end="24:00"
+                  start={`${new Date().getUTCHours()}:00`}
+                  end="23:00"
                   step={60}
                   value={startTime}
                   onChange={(time: any) => setStartTime(time)}
