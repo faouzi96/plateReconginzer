@@ -28,7 +28,6 @@ const ParkingCard = ({ data }: any) => {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
-    console.log(startTime)
     setEndTime(startTime + 3600);
   }, [startTime]);
 
@@ -188,7 +187,7 @@ const ParkingCard = ({ data }: any) => {
                 <Form.Control
                   required
                   value={license}
-                  onChange={(e) => setLicense(e.target.value)}
+                  onChange={(e) => setLicense(e.target.value.toUpperCase())}
                   placeholder="Vehicle License Plate"
                   aria-label="Search"
                   aria-describedby="basic-addon1"
