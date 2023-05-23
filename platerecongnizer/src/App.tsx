@@ -58,7 +58,7 @@ function App() {
 
   const handleQuitParking = () => {
     const docToUpadate = doc(db, "parkings", "98q4cgFU7rVL70LVumJM");
-    const hours = new Date().getUTCHours();
+    const hours = new Date().getHours();
     const endTime = data.parkings
       .filter((park: any) => park.parkingName === PARKING_NAME)[0]
       .books.filter(
