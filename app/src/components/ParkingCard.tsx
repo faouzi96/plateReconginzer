@@ -22,7 +22,7 @@ const ParkingCard = ({ data }: any) => {
   const [license, setLicense] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [startTime, setStartTime] = useState<number>(new Date().getUTCHours() * 3600);
+  const [startTime, setStartTime] = useState<number>(new Date().getHours() * 3600);
   const [endTime, setEndTime] = useState<number>(0);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -162,7 +162,7 @@ const ParkingCard = ({ data }: any) => {
                   From{" "}
                 </span>
                 <TimePicker
-                  start={`${new Date().getUTCHours()}:00`}
+                  start={`${new Date().getHours()}:00`}
                   end="23:00"
                   step={60}
                   value={startTime}
