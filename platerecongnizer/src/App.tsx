@@ -7,7 +7,7 @@ import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { app, db } from "./firebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
 
-const PARKING_NAME = "Axel II. Parking";
+const PARKING_NAME = "Parking E.Leclerc";
 
 function App() {
   const [licensePlate, setLicensePlate] = useState<string>("");
@@ -23,10 +23,13 @@ function App() {
         const parking = parkings.parkings.filter(
           (park: any) => park.parkingName === PARKING_NAME
         )[0];
+
         if (
           parking?.parkingName === PARKING_NAME &&
-          parking?.books?.filter((book: any) =>
-            book.licencsePlate?.includes(licensePlate)
+          Boolean(
+            parking?.books?.filter((book: any) =>
+              book.licencsePlate?.includes(licensePlate)
+            ).length
           )
         )
           setIsValid(true);
